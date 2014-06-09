@@ -159,7 +159,7 @@ class RmzTilemap {
 			var tilemap:FlxTilemap = new FlxTilemap();
 			tilemap.widthInTiles = rawTilemap.width;
 			tilemap.heightInTiles = rawTilemap.height;
-			tilemap.loadMap(tmxLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, 1, 1, 1);
+			tilemap.loadMap(tmxLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, tileSet.firstGID, 1, 1);
 			
 			return tilemap;
 	}

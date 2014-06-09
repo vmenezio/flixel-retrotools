@@ -45,6 +45,9 @@ class RmzActor extends FlxSprite {
 		controller = new RmzController();
 		movementSpeed = new FlxPoint();
 		movementAcceleration = new FlxPoint();
+		
+		setDrag(500, 500);
+		setMaxVelocity(100, 100); 
 	}
 	
 	/**
@@ -139,9 +142,9 @@ class RmzActor extends FlxSprite {
 			velocity.x += -movementAcceleration.x;
 		if ( ( (acceleratedMovementDirection & RIGHT) != NONE ) && !( (acceleratedMovementDirection & LEFT) != NONE ) )
 			velocity.x += movementAcceleration.x;
-		if ( ( (acceleratedMovementDirection & RIGHT) != UP ) && !( (acceleratedMovementDirection & LEFT) != DOWN ) )
+		if ( ( (acceleratedMovementDirection & UP) != NONE ) && !( (acceleratedMovementDirection & DOWN) != NONE ) )
 			velocity.y += -movementAcceleration.y;
-		if ( ( (acceleratedMovementDirection & RIGHT) != DOWN ) && !( (acceleratedMovementDirection & LEFT) != UP ) )
+		if ( ( (acceleratedMovementDirection & DOWN) != NONE ) && !( (acceleratedMovementDirection & UP) != NONE ) )
 			velocity.y += movementAcceleration.y;
 			
 		if ( drag.x < 0 && ( ( movementDirection & RIGHT ) | ( movementDirection & LEFT ) ) == NONE
