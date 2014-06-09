@@ -150,8 +150,8 @@ class RmzActor extends FlxSprite {
 		if ( drag.x < 0 && ( ( movementDirection & RIGHT ) | ( movementDirection & LEFT ) ) == NONE
 			&& ( ( acceleratedMovementDirection & RIGHT ) | ( acceleratedMovementDirection & LEFT ) ) == NONE )
 			velocity.x = 0;
-		if ( drag.y < 0 && ( ( movementDirection & UP ) | ( movementDirection & RIGHT ) ) == NONE
-			&& ( ( acceleratedMovementDirection & UP ) | ( acceleratedMovementDirection & RIGHT ) ) == NONE )
+		if ( drag.y < 0 && ( ( movementDirection & UP ) | ( movementDirection & DOWN ) ) == NONE
+			&& ( ( acceleratedMovementDirection & UP ) | ( acceleratedMovementDirection & DOWN ) ) == NONE )
 			velocity.y = 0;
 	}
 	
