@@ -1,0 +1,11 @@
+{
+	"name": "flixel-retrotools",
+	"url" : "https://github.com/vmenezio/flixel-retrotools",
+	"license": "MIT",
+	"tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "cross"],
+	"description": "Collection of useful classes that expand on HaxeFlixel's capabilities.",
+	"version": "0.0.1",
+	"releasenote": "Initial release, just a few packages introduced.",
+	"contributors": ["zayora"],
+	"dependencies": { "flixel": "", "flixel-addons": "" }
+}
