@@ -12,8 +12,8 @@ import flixel.FlxG;
 class RmzController
 {
 	
-	//TODO : add support for successive and simultaneous key presses.
-	//TODO : add support for unbinding keys.
+	// TODO: add support for successive and simultaneous key presses.
+	// TODO: add support for unbinding keys.
 	
 	// Single-key action maps
 	private var pressedActionMap:Map < Int,Dynamic > ;

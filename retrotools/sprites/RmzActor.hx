@@ -169,19 +169,41 @@ class RmzActor extends FlxSprite {
 	 * Called at each step to reset the direction of the <b>RmzActor</b>.
 	 */
 	private function resetDirection() {
+		if ( movementDirection == 0x00000 )
+			facing = acceleratedMovementDirection;
+		else
+			facing = movementDirection;
 		movementDirection = 0x00000;
 		acceleratedMovementDirection = 0x00000;
 	}
 	
+	/**
+	 * Inserts a <b>RmzCollider</b> into the <b>RmzActor</b>'s internal colliderGroup, and associates
+	 * it to the specified identifier in the internal colliderMap.
+	 * 
+	 * @param	identifier		<b>String</b> representing the key associated to the collider in the colliderMap.
+	 * @param	collider		<b>RmzCollider</b> to be inserted into this <b>RmzActor</b>'s colliderGroup.
+	 */
 	private function addCollider( identifier:String, collider:RmzCollider ):Void {
 		colliderMap.set( identifier, collider );
 		colliderGroup.add( collider );
 	}
 	
+	/**
+	 * Returns the <b>RmzCollider</b> associated with the specified identifier, or null if none is found.
+	 * 
+	 * @param	identifier		<b>String</b> representing the key of the desired <b>RmzCollider</b>
+	 * @return	A <b>RmzCollider</b> retrieved from the internal colliderMap.
+	 */
 	public function getCollider( identifier:String ):RmzCollider {
 		return colliderMap.get( identifier );
 	}
 	
+	/**
+	 * Returns the internal colliderGroup.
+	 * 
+	 * @return	A <b>FlxGroup</b> containing the internal <b>RmzColliders<b>.
+	 */
 	public function getColliderGroup():FlxGroup {
 		return colliderGroup;
 	}

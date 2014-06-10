@@ -65,7 +65,7 @@ class RmzTiledObject {
 	 * 
 	 * @param	attribute		<b>String</b> representing the name of the attribute being retrieved.
 	 * @param	defaultValue	<b>String</b> containing the value that is expected if the desired attribute is not found.
-	 * @return
+	 * @return	A <b>String</b> containing the value of the requested attribute.
 	 */
 	private function retrieveAttribute( attribute:String, ?defaultValue:String ):String {
 		var returnValue:String = rawPropertiesMap.get( attribute );
