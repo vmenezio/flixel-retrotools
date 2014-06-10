@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "cross"],
 	"description": "Collection of useful classes that expand on HaxeFlixel's capabilities.",
-	"version": "0.0.3",
-	"releasenote": "Fixed a bug in RmzActor regarding vertical movement. Fixed a bug preventing tilemaps with multiple tilesets to work.",
+	"version": "0.0.4",
+	"releasenote": "Fixed bug/typo in RmzActor.",
 	"contributors": ["zayora"],
 	"dependencies": { "flixel": "", "flixel-addons": "" }
 }

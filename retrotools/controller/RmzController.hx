@@ -24,9 +24,9 @@ class RmzController
 	 * Creates a new <b>RmzController</b>.
 	 */
 	public function new() {
-		pressedActionMap = new Map() ;
-		justPressedActionMap = new Map() ;
-		justReleasedActionMap = new Map() ;
+		pressedActionMap = new Map();
+		justPressedActionMap = new Map();
+		justReleasedActionMap = new Map();
 	}
 	
 	/**

@@ -2,6 +2,7 @@ package retrotools.sprites;
 
 // Core Flixel Imports
 import flixel.FlxSprite;
+import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
 import flixel.FlxObject;
 
@@ -30,6 +31,8 @@ class RmzActor extends FlxSprite {
 	private var acceleratedMovementDirection:UInt = 0x00000;
 	
 	private var controller:RmzController;
+	private var colliderGroup:FlxGroup;
+	private var colliderMap:Map<String,RmzCollider>;
 
 	/**
 	 * Creates a <b>RmzActor</b> at a specified position with a specified one-frame graphic. 
@@ -48,6 +51,9 @@ class RmzActor extends FlxSprite {
 		
 		setDrag(500, 500);
 		setMaxVelocity(100, 100); 
+		
+		colliderGroup = new FlxGroup();
+		colliderMap = new Map();
 	}
 	
 	/**
@@ -147,11 +153,15 @@ class RmzActor extends FlxSprite {
 		if ( ( (acceleratedMovementDirection & DOWN) != NONE ) && !( (acceleratedMovementDirection & UP) != NONE ) )
 			velocity.y += movementAcceleration.y;
 			
-		if ( drag.x < 0 && ( ( movementDirection & RIGHT ) | ( movementDirection & LEFT ) ) == NONE
-			&& ( ( acceleratedMovementDirection & RIGHT ) | ( acceleratedMovementDirection & LEFT ) ) == NONE )
+		if ( drag.x < 0 && ( ( ( movementDirection & ( RIGHT | LEFT ) ) == NONE ) 
+			 || ( ( ( movementDirection & RIGHT ) != NONE ) && ( ( movementDirection & LEFT ) != NONE ) ) )
+			 && ( ( ( acceleratedMovementDirection & ( RIGHT | LEFT ) ) == NONE ) 
+			 || ( ( ( acceleratedMovementDirection & RIGHT ) != NONE ) && ( ( acceleratedMovementDirection & LEFT ) != NONE ) ) ) )
 			velocity.x = 0;
-		if ( drag.y < 0 && ( ( movementDirection & UP ) | ( movementDirection & DOWN ) ) == NONE
-			&& ( ( acceleratedMovementDirection & UP ) | ( acceleratedMovementDirection & DOWN ) ) == NONE )
+		if ( drag.y < 0 && ( ( ( movementDirection & ( UP | DOWN ) ) == NONE ) 
+			 || ( ( ( movementDirection & UP ) != NONE ) && ( ( movementDirection & DOWN ) != NONE ) ) )
+			 && ( ( ( acceleratedMovementDirection & ( UP | DOWN ) ) == NONE ) 
+			 || ( ( ( acceleratedMovementDirection & UP ) != NONE ) && ( ( acceleratedMovementDirection & DOWN ) != NONE ) ) ) )
 			velocity.y = 0;
 	}
 	
@@ -161,6 +171,19 @@ class RmzActor extends FlxSprite {
 	private function resetDirection() {
 		movementDirection = 0x00000;
 		acceleratedMovementDirection = 0x00000;
+	}
+	
+	private function addCollider( identifier:String, collider:RmzCollider ):Void {
+		colliderMap.set( identifier, collider );
+		colliderGroup.add( collider );
+	}
+	
+	public function getCollider( identifier:String ):RmzCollider {
+		return colliderMap.get( identifier );
+	}
+	
+	public function getColliderGroup():FlxGroup {
+		return colliderGroup;
 	}
 	
 }
