@@ -62,6 +62,7 @@ class RmzActor extends FlxSprite {
 	override public function update():Void {
 		controller.checkKeyPress();
 		setVelocity();
+		setFacingDirection();
 		resetDirection();
 		
 		super.update();
@@ -166,13 +167,27 @@ class RmzActor extends FlxSprite {
 	}
 	
 	/**
+	 * Called at each step to set the facing direction of the <b>RmzActor</b>
+	 */
+	private function setFacingDirection() {
+		if ( movementDirection == 0x00000 && acceleratedMovementDirection != 0x00000 )
+			facing = acceleratedMovementDirection;
+		else if ( movementDirection != 0x00000 )
+			facing = movementDirection;
+			
+		if ( ( ( facing & RIGHT ) != NONE ) && ( ( facing & LEFT ) != NONE ) ) {
+			facing -= ( RIGHT | LEFT );
+		}
+		
+		if ( ( ( facing & UP ) != NONE ) && ( ( facing & DOWN ) != NONE ) ) {
+			facing -= ( UP | DOWN );
+		}
+	}
+	
+	/**
 	 * Called at each step to reset the direction of the <b>RmzActor</b>.
 	 */
 	private function resetDirection() {
-		if ( movementDirection == 0x00000 )
-			facing = acceleratedMovementDirection;
-		else
-			facing = movementDirection;
 		movementDirection = 0x00000;
 		acceleratedMovementDirection = 0x00000;
 	}
