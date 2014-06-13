@@ -25,8 +25,6 @@ import flixel.addons.editors.tiled.TiledObjectGroup;
 
 class RmzTilemap {
 	
-	//TODO: Finish documentation.
-	
 	private inline static var TILESETS_PATH = "assets/images/tilesets/";
 	private var rawTilemap:TiledMap;
 	
@@ -38,8 +36,8 @@ class RmzTilemap {
 	 * Creates a <b>RmzTilemap</b> from a specified Tiled map file (.tmx).
 	 * 
 	 * @param	tmxPath			<b>String</b> pointing to the path where the .tmx file is stored.
-	 * @param	offsetX
-	 * @param	offsetY
+	 * @param	offsetX			<b>Float</b> representing the map's horizontal offset in pixels.
+	 * @param	offsetY			<b>Float</b> representing the map's vertical offset in pixels.
 	 */
 	public function new( tmxPath:String, offsetX:Float, offsetY:Float ) {
 		rawTilemap = new TiledMap( tmxPath );

@@ -103,6 +103,14 @@ class RmzCollider extends FlxSprite
 	}
 	
 	/**
+	 * Releases the <b>RmzCollider</b> from the <b>FlxObject</b> it's been attached to.
+	 */
+	public function detach():Void {
+		this.attachedObject = null;
+		this.attached = false;
+	}
+	
+	/**
 	 * Kills the <b>RmzCollider</b> once its lifespan is up.
 	 * 
 	 * @param	timer		<b>FlxTimer</b> controlling the <b>RmzCollide</b>'s lifespan.
