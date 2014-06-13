@@ -6,6 +6,7 @@ import haxe.io.Path;
 // Core Flixel Imports
 import flixel.tile.FlxTilemap;
 import flixel.group.FlxGroup;
+import flixel.util.FlxPoint;
 import flixel.FlxG;
 
 // Tiled Imports
@@ -24,8 +25,12 @@ import flixel.addons.editors.tiled.TiledObjectGroup;
 
 class RmzTilemap {
 	
+	//TODO: Finish documentation.
+	
 	private inline static var TILESETS_PATH = "assets/images/tilesets/";
 	private var rawTilemap:TiledMap;
+	
+	private var offset:FlxPoint;
 	
 	public var indexedLayers:Map<String, FlxTilemap>;
 
@@ -33,9 +38,12 @@ class RmzTilemap {
 	 * Creates a <b>RmzTilemap</b> from a specified Tiled map file (.tmx).
 	 * 
 	 * @param	tmxPath			<b>String</b> pointing to the path where the .tmx file is stored.
+	 * @param	offsetX
+	 * @param	offsetY
 	 */
-	public function new( tmxPath:String ) {
+	public function new( tmxPath:String, offsetX:Float, offsetY:Float ) {
 		rawTilemap = new TiledMap( tmxPath );
+		offset = new FlxPoint( offsetX, offsetY );
 		indexedLayers = generateLayerMap( rawTilemap.layers );
 	}
 	
@@ -107,10 +115,10 @@ class RmzTilemap {
 	 * @return	A <b>RmzTiledObject</b> created from the properties of the rawObject.
 	 */
 	private function generateRmzTiledObject( rawObject:TiledObject, objectGroup:TiledObjectGroup, desiredType:String ):RmzTiledObject {
-		var x:Int = rawObject.x;
-		var y:Int = rawObject.y;
-		var width:Int = rawObject.width;
-		var height:Int = rawObject.height;
+		var x:Float = rawObject.x + offset.x;
+		var y:Float = rawObject.y + offset.y;
+		var width:Float = rawObject.width;
+		var height:Float = rawObject.height;
 		
 		// objects in tiled are aligned bottom-left (top-left in flixel)
 		if (rawObject.gid != -1)
@@ -160,6 +168,8 @@ class RmzTilemap {
 			tilemap.widthInTiles = rawTilemap.width;
 			tilemap.heightInTiles = rawTilemap.height;
 			tilemap.loadMap(tmxLayer.tileArray, processedPath, tileSet.tileWidth, tileSet.tileHeight, 0, tileSet.firstGID, 1, 1);
+			tilemap.x += offset.x;
+			tilemap.y += offset.y;
 			
 			return tilemap;
 	}

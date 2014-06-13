@@ -17,7 +17,7 @@ import flixel.util.FlxTimer;
 class RmzCollider extends FlxSprite
 {
 	
-	// TODO: Finish documentation.
+	// TODO: Make it possible to chose between 'collide' and 'overlap'.
 	
 	private var collidingState:FlxState;
 	private var CollidingClass:Class<FlxObject>;
