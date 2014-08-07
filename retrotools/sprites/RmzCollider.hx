@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxObject;
+import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
 import flixel.util.FlxTimer;
 
@@ -19,7 +20,7 @@ class RmzCollider extends FlxSprite
 	
 	// TODO: Make it possible to chose between 'collide' and 'overlap'.
 	
-	private var collidingState:FlxState;
+	private var collidingGroup:FlxGroup;
 	private var CollidingClass:Class<FlxObject>;
 	
 	private var attachedObject:FlxObject;
@@ -34,17 +35,17 @@ class RmzCollider extends FlxSprite
 	 * @param	collidingState		<b>FlxState</b> from where the <b>RmzCollider</b> will draw candidates for it's collision checks.
 	 * @param	CollidingClass		<b>Class<FlxObject></b> the <b>RmzCollider</b> must succesfully collide with.
 	 */
-	public function new(collidingState:FlxState, CollidingClass:Class<FlxObject>) {
+	public function new(collidingGroup:FlxGroup, CollidingClass:Class<FlxObject>) {
 		super(0, 0);
 		kill();
 		attachmentOffset = new FlxPoint();
 		timer = new FlxTimer();
-		this.collidingState = collidingState;
+		this.collidingGroup = collidingGroup;
 		this.CollidingClass = CollidingClass;
 	}
 	
 	override public function update():Void {
-		FlxG.overlap(this, collidingState, verifyCollision);
+		FlxG.overlap(this, collidingGroup, verifyCollision);
 		if ( attached ) {
 			this.x = attachedObject.x + attachmentOffset.x;
 			this.y = attachedObject.y + attachmentOffset.y;
@@ -80,8 +81,12 @@ class RmzCollider extends FlxSprite
 	 * @param	lifespan	<b>Float</b> representing the time in seconds the <b>RmzCollider</b> must remain active. 
 	 * If assigned to a value of zero or less, the <b>RmzCollider</b> remains active until it's killed externally.
 	 */
-	public function activate( x:Float, y:Float, lifespan:Float = 0 ) {
+	public function activate( x:Float = 0, y:Float = 0, lifespan:Float = -1  ) {
 		revive();
+		if ( attached ) {
+			x += attachedObject.x + attachmentOffset.x;
+			y += attachedObject.y + attachmentOffset.x;
+		}
 		this.x = x;
 		this.y = y;
 		if ( lifespan > 0 )

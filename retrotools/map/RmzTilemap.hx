@@ -25,6 +25,8 @@ import flixel.addons.editors.tiled.TiledObjectGroup;
 
 class RmzTilemap {
 	
+	// TODO: getObjectGroup alternative that retrieves objects from a specific object layer
+	
 	private inline static var TILESETS_PATH = "assets/images/tilesets/";
 	private var rawTilemap:TiledMap;
 	

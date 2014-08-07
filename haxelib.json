@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "cross"],
 	"description": "Collection of useful classes that expand on HaxeFlixel's capabilities.",
-	"version": "0.0.5",
-	"releasenote": "Added RmzCollider class. Fixed some bugs in RmzActor. Made changes to the documentation.",
+	"version": "0.0.7",
+	"releasenote": "Minor fixes to RmzCollider. Added initial tests with RmzTextbox.",
 	"contributors": ["zayora"],
 	"dependencies": { "flixel": "", "flixel-addons": "" }
 }
