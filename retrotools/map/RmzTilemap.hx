@@ -48,13 +48,13 @@ class RmzTilemap {
 	}
 	
 	/**
-	 * Returns a new <b>FlxGroup</b> containing the sprites corresponding to the specified <i>Type</i> retrieved from the map. 
+	 * Returns a new <b>FlxGroup</b> containing the <b>FlxSprites</b> corresponding to the specified <i>Type</i> retrieved from the map. 
 	 * Returns all sprites if no Type is specified.
 	 * 
 	 * @param	desiredType		<b>String</b> referencing which <i>Type</i> (internal property of Tiled objects) of objects must be inserted into the group. 
 	 * @return	A new <b>FlxGroup</b> filled with <b>FlxSprites</b> made up from the specified <i>Type</i>.
 	 */
-	public function getObjectGroup( desiredType:String = null ):FlxGroup {
+	public function getObjectGroupByType( desiredType:String = null ):FlxGroup {
 		var returnGroup:FlxGroup = new FlxGroup();
 		
 		for (group in rawTilemap.objectGroups) {
@@ -67,6 +67,30 @@ class RmzTilemap {
 		}
 		
 		return returnGroup;
+	}
+	
+	/**
+	 * Returns a new <b>FlxGroup</b> containing the <b>FlxSprites</b> corresponding to the specified <i>Layer</i> retrieved from the map.
+	 * 
+	 * @param	desiredLayer	<b>String</b> referencing the <i>Layer</i> in which to look for sprites. 
+	 * @return	A new <b>FlxGroup</b> filled with <b>FlxSprites</b> retrieved from the specified <i>Layer</i>.
+	 */
+	public function getObjectGroupByLayer( desiredLayer:String ):FlxGroup {
+		var returnGroup:FlxGroup = new FlxGroup();
+		
+		for (group in rawTilemap.objectGroups) {
+			if ( group.name == desiredLayer ) {
+				for (o in group.objects) {
+					var object:RmzTiledObject = generateRmzTiledObject(o, group);
+					
+					if (object != null)
+						returnGroup.add(object.getSprite());
+				}
+			}
+			
+		}
+		
+		throw "Layer with name '" + desiredLayer + "' not found within the .tmx file.";
 	}
 	
 	/**
@@ -114,7 +138,7 @@ class RmzTilemap {
 	 * @param	desiredType		<b>String</b> referencing the internal <i>Type</i> attribute of the rawObject.
 	 * @return	A <b>RmzTiledObject</b> created from the properties of the rawObject.
 	 */
-	private function generateRmzTiledObject( rawObject:TiledObject, objectGroup:TiledObjectGroup, desiredType:String ):RmzTiledObject {
+	private function generateRmzTiledObject( rawObject:TiledObject, objectGroup:TiledObjectGroup, ?desiredType:String ):RmzTiledObject {
 		var x:Float = rawObject.x + offset.x;
 		var y:Float = rawObject.y + offset.y;
 		var width:Float = rawObject.width;
@@ -124,7 +148,7 @@ class RmzTilemap {
 		if (rawObject.gid != -1)
 			y -= objectGroup.map.getGidOwner(rawObject.gid).tileHeight;
 		
-		var TempClass:Class<Dynamic> = Type.resolveClass("tiledObjects."+rawObject.type);
+		var TempClass:Class<Dynamic> = Type.resolveClass("tiledObjects."+rawObject.type+"Parser");
 		var tempObject:RmzTiledObject;
 		
 		if (desiredType != null && rawObject.type != desiredType)

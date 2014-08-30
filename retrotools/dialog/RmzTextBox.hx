@@ -32,7 +32,7 @@ class RmzTextBox extends FlxGroup
 	
 	private var x:Float;
 	private var y:Float;
-	private var textObject:FlxTypeText;
+	private var textObject:RmzText;
 	private var finished:Bool;
 	
 	private var multipanel(default,set):Bool = false;
@@ -55,7 +55,7 @@ class RmzTextBox extends FlxGroup
 		controller = new RmzController();
 		
 		//Initializing the text
-		this.textObject = new FlxTypeText( x, y, 100, content );
+		this.textObject = new RmzText( x, y, 100, content );
 		this.multipanel = multipanel;
 		this.typed = typed;
 		textObject.setCompleteCallback( endPanel );

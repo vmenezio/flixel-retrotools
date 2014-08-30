@@ -3,6 +3,7 @@ package retrotools.sprites;
 // Core Flixel Imports
 import flixel.FlxSprite;
 import flixel.group.FlxGroup;
+import flixel.input.FlxAccelerometer;
 import flixel.util.FlxPoint;
 import flixel.FlxObject;
 
@@ -103,12 +104,13 @@ class RmzActor extends FlxSprite {
 	}
 	
 	/**
-	 * Defines the drag imposed on the <b>RmzActor</b> when it's not accelerating.
+	 * Defines the drag imposed on the <b>RmzActor</b> when it's not accelerating. 
+	 * If set to a negative number, the <b>RmzActor</b> will stop as soon as it stops accelerating.
 	 * 
 	 * @param	x			<b>Float</b> representing the x component of the drag.
 	 * @param	y			<b>Float</b> representing the y component of the drag.
 	 */
-	public function setDrag( x:Float, y:Float ) {
+	public function setDrag( x:Float, y:Float ):Void {
 		drag.set(x, y);
 	}
 	
@@ -118,7 +120,7 @@ class RmzActor extends FlxSprite {
 	 * @param	x			<b>Float</b> representing the x component of the acceleration.
 	 * @param	y			<b>Float</b> representing the y component of the acceleration.
 	 */
-	public function setAcceleration( x:Float, y:Float ) {
+	public function setAcceleration( x:Float, y:Float ):Void {
 		acceleration.set(x, y);
 	}
 	
@@ -128,8 +130,22 @@ class RmzActor extends FlxSprite {
 	 * @param	x			<b>Float</b> representing the max velocity in the x direction
 	 * @param	y			<b>Float</b> representing the max velocity in the y direction
 	 */
-	public function setMaxVelocity( x:Float, y:Float ) {
+	public function setMaxVelocity( x:Float, y:Float ):Void {
 		maxVelocity.set(x, y);
+	}
+	
+	/**
+	 * Defines what portion of the <b>RmzActor</b>'s graphic should actually be taken into 
+	 * account when calculating collisions.
+	 * 
+	 * @param	offsetX		<b>Float</b> representing the starting point of the hitbox, horizontally.
+	 * @param	offsetY		<b>Float</b> representing the starting point of the hitbox, vertically.
+	 * @param	width		<b>Float</b> representing the width of the hitbox.
+	 * @param	height		<b>Float</b> representing the height of the hitbox.
+	 */
+	public function setHitbox( offsetX:Float, offsetY:Float, width:Float, height:Float ):Void {
+		this.offset.set( offsetX, offsetY );
+		this.setSize( width, height );
 	}
 	
 	/**
@@ -169,7 +185,7 @@ class RmzActor extends FlxSprite {
 	/**
 	 * Called at each step to set the facing direction of the <b>RmzActor</b>
 	 */
-	private function setFacingDirection() {
+	private function setFacingDirection():Void {
 		if ( movementDirection == 0x00000 && acceleratedMovementDirection != 0x00000 )
 			facing = acceleratedMovementDirection;
 		else if ( movementDirection != 0x00000 )
@@ -187,7 +203,7 @@ class RmzActor extends FlxSprite {
 	/**
 	 * Called at each step to reset the direction of the <b>RmzActor</b>.
 	 */
-	private function resetDirection() {
+	private function resetDirection():Void {
 		movementDirection = 0x00000;
 		acceleratedMovementDirection = 0x00000;
 	}
