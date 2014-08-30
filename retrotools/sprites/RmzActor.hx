@@ -5,9 +5,7 @@ import flixel.FlxSprite;
 import flixel.group.FlxGroup;
 import flixel.util.FlxPoint;
 import flixel.FlxObject;
-
-// Retrotools Imports
-import retrotools.controller.RmzController;
+import flixel.FlxG;
 
 /**
  * The <b>RmzActor</b> class expands the functionaly of the <b>FlxSprite</b> making it 
@@ -16,7 +14,7 @@ import retrotools.controller.RmzController;
  * 
  * @author Vinícius Menézio
  */
-class RmzActor extends FlxSprite {
+class RmzActor extends RmzEntity {
 	
 	public static inline var NONE:UInt		= 0x00000;
 	public static inline var LEFT:UInt		= 0x00001;
@@ -30,10 +28,6 @@ class RmzActor extends FlxSprite {
 	private var movementAcceleration:FlxPoint;
 	private var acceleratedMovementDirection:UInt = 0x00000;
 	
-	private var controller:RmzController;
-	private var colliderGroup:FlxGroup;
-	private var colliderMap:Map<String,RmzCollider>;
-
 	/**
 	 * Creates a <b>RmzActor</b> at a specified position with a specified one-frame graphic. 
 	 * If none is provided, a 16x16 image of the HaxeFlixel logo is used.
@@ -42,25 +36,20 @@ class RmzActor extends FlxSprite {
 	 * @param	x				<b>Float</b> specifying the initial y coordinate of the sprite.
 	 * @param	simpleGraphic	<b>Dynamic</b> The graphic you want to display.
 	 */
-	public function new(x:Float=0, y:Float=0, ?simpleGraphic:Dynamic) {
+	private function new(x:Float=0, y:Float=0, ?simpleGraphic:Dynamic) {
 		super(x, y, simpleGraphic);
 		
-		controller = new RmzController();
 		movementSpeed = new FlxPoint();
 		movementAcceleration = new FlxPoint();
 		
 		setDrag(500, 500);
-		setMaxVelocity(100, 100); 
-		
-		colliderGroup = new FlxGroup();
-		colliderMap = new Map();
+		setMaxVelocity(100, 100);
 	}
 	
 	/**
 	 * Called at each step to update the state of this object.
 	 */
 	override public function update():Void {
-		controller.checkKeyPress();
 		setVelocity();
 		setFacingDirection();
 		resetDirection();
@@ -191,36 +180,4 @@ class RmzActor extends FlxSprite {
 		movementDirection = 0x00000;
 		acceleratedMovementDirection = 0x00000;
 	}
-	
-	/**
-	 * Inserts a <b>RmzCollider</b> into the <b>RmzActor</b>'s internal colliderGroup, and associates
-	 * it to the specified identifier in the internal colliderMap.
-	 * 
-	 * @param	identifier		<b>String</b> representing the key associated to the collider in the colliderMap.
-	 * @param	collider		<b>RmzCollider</b> to be inserted into this <b>RmzActor</b>'s colliderGroup.
-	 */
-	private function addCollider( identifier:String, collider:RmzCollider ):Void {
-		colliderMap.set( identifier, collider );
-		colliderGroup.add( collider );
-	}
-	
-	/**
-	 * Returns the <b>RmzCollider</b> associated with the specified identifier, or null if none is found.
-	 * 
-	 * @param	identifier		<b>String</b> representing the key of the desired <b>RmzCollider</b>
-	 * @return	A <b>RmzCollider</b> retrieved from the internal colliderMap.
-	 */
-	public function getCollider( identifier:String ):RmzCollider {
-		return colliderMap.get( identifier );
-	}
-	
-	/**
-	 * Returns the internal colliderGroup.
-	 * 
-	 * @return	A <b>FlxGroup</b> containing the internal <b>RmzColliders<b>.
-	 */
-	public function getColliderGroup():FlxGroup {
-		return colliderGroup;
-	}
-	
 }
