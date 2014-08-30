@@ -2,7 +2,7 @@ package retrotools.dialog;
 
 /**
  * ...
- * @author ...
+ * @author Vinícius Menézio
  */
 class RmzPrompt
 {

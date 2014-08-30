@@ -18,6 +18,7 @@ class RmzController
 	// Single-key action maps
 	private var pressedActionMap:Map < Int,Dynamic > ;
 	private var justPressedActionMap:Map < Int, Dynamic > ;
+	private var comboActionMap:Map < Int, Dynamic > ;
 	private var justReleasedActionMap:Map < Int, Dynamic > ;
 
 	/**
@@ -26,6 +27,7 @@ class RmzController
 	public function new() {
 		pressedActionMap = new Map();
 		justPressedActionMap = new Map();
+		comboActionMap = new Map();
 		justReleasedActionMap = new Map();
 	}
 	
@@ -49,6 +51,11 @@ class RmzController
 	 */
 	public function bindJustPressed( key:Int, action:Dynamic, ?params:Array<Dynamic> ):Void {
 		justPressedActionMap.set( key, { action:action, params:params } );
+	}
+	
+	public function bindCombo( keys:Array<Int>, delays:Array<Int>, action:Dynamic, ?params:Array<Dynamic> ):Void {
+		var combo = new RmzCombo( keys, delays );
+		comboActionMap.set( combo, { action:action, params:params } );
 	}
 	
 	/**
@@ -81,6 +88,11 @@ class RmzController
 			if ( FlxG.keys.justReleased.check( key ) ) {
 				Reflect.callMethod( { }, justReleasedActionMap.get( key ).action, justReleasedActionMap.get( key ).params );
 			}
+		}
+		for ( combo in comboActionMap.keys() ) {
+			//if ( combo.checkSuccess() ) {
+			//
+			//}
 		}
 	}
 	
