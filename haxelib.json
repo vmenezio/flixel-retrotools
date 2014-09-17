@@ -2,10 +2,10 @@
 	"name": "flixel-retrotools",
 	"url" : "https://github.com/vmenezio/flixel-retrotools",
 	"license": "MIT",
-	"tags": ["game", "openfl", "flash", "neko", "cpp", "android", "ios", "cross"],
+	"tags": ["game", "openfl", "flash", "cpp", "cross"],
 	"description": "Collection of useful classes that expand on HaxeFlixel's capabilities.",
-	"version": "0.0.7",
-	"releasenote": "Minor fixes to RmzCollider. Added initial tests with RmzTextbox.",
+	"version": "0.1.0",
+	"releasenote": "Added textboxes, prompts, gamepad support and made fixes and adjustments to pretty much everything.",
 	"contributors": ["zayora"],
-	"dependencies": { "flixel": "", "flixel-addons": "" }
+	"dependencies": { "flixel": "", "flixel-addons": "", "flixel-ui": "" }
 }

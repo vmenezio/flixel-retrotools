@@ -16,19 +16,22 @@ class RmzController
 	// TODO: add support for unbinding keys.
 	
 	// Single-key action maps
-	private var pressedActionMap:Map < Int,Dynamic > ;
-	private var justPressedActionMap:Map < Int, Dynamic > ;
-	private var comboActionMap:Map < Int, Dynamic > ;
-	private var justReleasedActionMap:Map < Int, Dynamic > ;
+	private var pressedActionMap:		Map < Array <Int>,Dynamic > ;
+	private var justPressedActionMap:	Map < Array <Int>, Dynamic > ;
+	private var comboActionMap:			Map < RmzCombo, Dynamic > ;
+	private var justReleasedActionMap:	Map < Array <Int>, Dynamic > ;
+	
+	// Gamepad action maps
+	private var gamepadPressedActionMaps:		Array< Map < Array <Int>, Dynamic > > ;
+	private var gamepadJustPressedActionMaps:	Array< Map < Array <Int>, Dynamic > > ;
+	private var gamepadComboActionMap:			Array< Map < Array <Int>, Dynamic > > ;
+	private var gamepadJustReleasedActionMaps:	Array< Map < Array <Int>, Dynamic > > ;
 
 	/**
 	 * Creates a new <b>RmzController</b>.
 	 */
 	public function new() {
-		pressedActionMap = new Map();
-		justPressedActionMap = new Map();
-		comboActionMap = new Map();
-		justReleasedActionMap = new Map();
+		initializeMaps();
 	}
 	
 	/**
@@ -38,8 +41,8 @@ class RmzController
 	 * @param	action		<b>Dynamic</b> representing the method to be called when the specified key is pressed.
 	 * @param	params		<b>Array<Dynamic></b> containing the parameters to be passed to the specified method.
 	 */
-	public function bindPressed( key:Int, action:Dynamic, ?params:Array<Dynamic> ):Void {
-		pressedActionMap.set( key, { action:action, params:params } );
+	public function bindPressed( keys:Array <Int>, action:Dynamic, ?params:Array<Dynamic> ):Void {
+		pressedActionMap.set( keys, { action:action, params:params } );
 	}
 	
 	/**
@@ -49,7 +52,7 @@ class RmzController
 	 * @param	action		<b>Dynamic</b> representing the method to be called when the specified key is pressed.
 	 * @param	params		<b>Array<Dynamic></b> containing the parameters to be passed to the specified method.
 	 */
-	public function bindJustPressed( key:Int, action:Dynamic, ?params:Array<Dynamic> ):Void {
+	public function bindJustPressed( key:Array <Int>, action:Dynamic, ?params:Array<Dynamic> ):Void {
 		justPressedActionMap.set( key, { action:action, params:params } );
 	}
 	
@@ -65,8 +68,28 @@ class RmzController
 	 * @param	action		<b>Dynamic</b> representing the method to be called when the specified key is pressed.
 	 * @param	params		<b>Array<Dynamic></b> containing the parameters to be passed to the specified method.
 	 */
-	public function bindJustReleased( key:Int, action:Dynamic, ?params:Array<Dynamic> ):Void {
-		justReleasedActionMap.set( key, { action:action, params:params } );
+	public function bindJustReleased( keys:Array <Int>, action:Dynamic, ?params:Array<Dynamic> ):Void {
+		justReleasedActionMap.set( keys, { action:action, params:params } );
+	}
+	
+	// Gamepad Bindings
+	
+	public function bindGamepadPressed( buttons:Array<Int>, gamepadID:Int, action:Dynamic, ?params:Array<Dynamic> ):Void {
+		if ( gamepadPressedActionMaps[gamepadID] == null )
+			gamepadPressedActionMaps[gamepadID] = new Map();
+		gamepadPressedActionMaps[gamepadID].set( buttons, { action:action, params:params } );
+	}
+	
+	public function bindGamepadJustPressed( buttons:Array<Int>, gamepadID:Int, action:Dynamic, ?params:Array<Dynamic> ):Void {
+		if ( gamepadJustPressedActionMaps[gamepadID] == null )
+			gamepadJustPressedActionMaps[gamepadID] = new Map();
+		gamepadJustPressedActionMaps[gamepadID].set( buttons, { action:action, params:params } );
+	}
+	
+	public function bindGamepadJustReleased( buttons:Array<Int>, gamepadID:Int, action:Dynamic, ?params:Array<Dynamic> ):Void {
+		if ( gamepadJustReleasedActionMaps[gamepadID] == null )
+			gamepadJustReleasedActionMaps[gamepadID] = new Map();
+		gamepadJustReleasedActionMaps[gamepadID].set( buttons, { action:action, params:params } );
 	}
 	
 	/**
@@ -74,19 +97,25 @@ class RmzController
 	 * methods for those that are.
 	 */
 	public function checkKeyPress():Void {
-		for ( key in pressedActionMap.keys() ) {
-			if ( FlxG.keys.pressed.check( key ) ) {
-				Reflect.callMethod( { }, pressedActionMap.get( key ).action, pressedActionMap.get( key ).params );
+		for ( keys in pressedActionMap.keys() ) {
+			for  ( key in keys ) {
+				if ( FlxG.keys.pressed.check( key ) ) {
+					Reflect.callMethod( null, pressedActionMap.get( keys ).action, pressedActionMap.get( keys ).params );
+				}
 			}
 		}
-		for ( key in justPressedActionMap.keys() ) {
-			if ( FlxG.keys.justPressed.check( key ) ) {
-				Reflect.callMethod( { }, justPressedActionMap.get( key ).action, justPressedActionMap.get( key ).params );
+		for ( keys in justPressedActionMap.keys() ) {
+			for  ( key in keys ) {
+				if ( FlxG.keys.justPressed.check( key ) ) {
+					Reflect.callMethod( null, justPressedActionMap.get( keys ).action, justPressedActionMap.get( keys ).params );
+				}
 			}
 		}
-		for ( key in justReleasedActionMap.keys() ) {
-			if ( FlxG.keys.justReleased.check( key ) ) {
-				Reflect.callMethod( { }, justReleasedActionMap.get( key ).action, justReleasedActionMap.get( key ).params );
+		for ( keys in justReleasedActionMap.keys() ) {
+			for  ( key in keys ) {
+				if ( FlxG.keys.justReleased.check( key ) ) {
+					Reflect.callMethod( null, justReleasedActionMap.get( keys ).action, justReleasedActionMap.get( keys ).params );
+				}
 			}
 		}
 		for ( combo in comboActionMap.keys() ) {
@@ -94,6 +123,53 @@ class RmzController
 			//
 			//}
 		}
+		
+		// Gamepad Checks
+		
+		for ( gamepadID in 0...gamepadPressedActionMaps.length ) {
+			for ( buttons in gamepadPressedActionMaps[gamepadID].keys() ) {
+				for  ( button in buttons ) {
+					if ( FlxG.gamepads.getByID(gamepadID).pressed( button ) ) {
+						Reflect.callMethod( null, gamepadPressedActionMaps[gamepadID].get( buttons ).action,
+								gamepadPressedActionMaps[gamepadID].get( buttons ).params );
+					}
+				}
+			}
+		}
+		
+		for ( gamepadID in 0...gamepadJustPressedActionMaps.length ) {
+			for ( buttons in gamepadJustPressedActionMaps[gamepadID].keys() ) {
+				for  ( button in buttons ) {
+					if ( FlxG.gamepads.getByID(gamepadID).justPressed( button ) ) {
+						Reflect.callMethod( null, gamepadJustPressedActionMaps[gamepadID].get( buttons ).action, 
+								gamepadJustPressedActionMaps[gamepadID].get( buttons ).params );
+					}
+				}
+			}
+		}
+		
+		for ( gamepadID in 0...gamepadJustReleasedActionMaps.length ) {
+			for ( buttons in gamepadJustReleasedActionMaps[gamepadID].keys() ) {
+				for  ( button in buttons ) {
+					if ( FlxG.gamepads.getByID(gamepadID).justReleased( button ) ) {
+						Reflect.callMethod( null, gamepadJustReleasedActionMaps[gamepadID].get( buttons ).action, 
+								gamepadJustReleasedActionMaps[gamepadID].get( buttons ).params );
+					}
+				}
+			}
+		}
+	}
+	
+	private function initializeMaps():Void {
+		pressedActionMap = new Map();
+		justPressedActionMap = new Map();
+		comboActionMap = new Map();
+		justReleasedActionMap = new Map();
+		
+		gamepadPressedActionMaps = new Array();
+		gamepadJustPressedActionMaps = new Array();
+		gamepadComboActionMap = new Array();
+		gamepadJustReleasedActionMaps = new Array();
 	}
 	
 }

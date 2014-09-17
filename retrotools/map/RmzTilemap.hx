@@ -52,7 +52,7 @@ class RmzTilemap {
 	 * Returns all sprites if no Type is specified.
 	 * 
 	 * @param	desiredType		<b>String</b> referencing which <i>Type</i> (internal property of Tiled objects) of objects must be inserted into the group. 
-	 * @return	A new <b>FlxGroup</b> filled with <b>FlxSprites</b> made up from the specified <i>Type</i>.
+	 * @return	A new <b>FlxGroup</b> filled with <b>FlxBasics</b> made up from the specified <i>Type</i>.
 	 */
 	public function getObjectGroupByType( desiredType:String = null ):FlxGroup {
 		var returnGroup:FlxGroup = new FlxGroup();
@@ -62,7 +62,7 @@ class RmzTilemap {
 				var object:RmzTiledObject = generateRmzTiledObject(o, group, desiredType);
 				
 				if (object != null)
-					returnGroup.add(object.getSprite());
+					returnGroup.add(object.getObject());
 			}
 		}
 		
@@ -73,7 +73,7 @@ class RmzTilemap {
 	 * Returns a new <b>FlxGroup</b> containing the <b>FlxSprites</b> corresponding to the specified <i>Layer</i> retrieved from the map.
 	 * 
 	 * @param	desiredLayer	<b>String</b> referencing the <i>Layer</i> in which to look for sprites. 
-	 * @return	A new <b>FlxGroup</b> filled with <b>FlxSprites</b> retrieved from the specified <i>Layer</i>.
+	 * @return	A new <b>FlxGroup</b> filled with <b>FlxBasics</b> retrieved from the specified <i>Layer</i>.
 	 */
 	public function getObjectGroupByLayer( desiredLayer:String ):FlxGroup {
 		var returnGroup:FlxGroup = new FlxGroup();
@@ -84,7 +84,7 @@ class RmzTilemap {
 					var object:RmzTiledObject = generateRmzTiledObject(o, group);
 					
 					if (object != null)
-						returnGroup.add(object.getSprite());
+						returnGroup.add(object.getObject());
 				}
 			}
 			

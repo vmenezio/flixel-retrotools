@@ -4,7 +4,7 @@ package retrotools.map;
 import flixel.addons.editors.tiled.TiledObject;
 
 // Core Flixel Imports
-import flixel.FlxSprite;
+import flixel.FlxBasic;
 
 /**
  * The <b>RmzTiledObject</b> class serves to help translate an internal object from a .tmx file,
@@ -22,7 +22,7 @@ class RmzTiledObject {
 	private var width:Float;
 	private var height:Float;
 	
-	private var sprite:FlxSprite;
+	private var object:FlxBasic;
 
 	/**
 	 * Creates a <b>RmzTiledObject</b> from the properties retrieved from an object in a .tmx file.
@@ -41,14 +41,14 @@ class RmzTiledObject {
 		this.width = width;
 		this.height = height;
 		
-		initializeSprite();
+		initializeObject();
 	}
 	
 	/**
-	 * Generates a <b>FlxSprite</b> from the attributes of the <b>RmzTiledObject</b>.
+	 * Generates a <b>FlxBasic</b> from the attributes of the <b>RmzTiledObject</b>.
 	 */
-	private function initializeSprite():Void {
-		this.sprite = new FlxSprite( x, y );
+	private function initializeObject():Void {
+		this.object = new FlxBasic();
 	}
 	
 	/**
@@ -56,8 +56,8 @@ class RmzTiledObject {
 	 * 
 	 * @return	A <b>FlxSprite</b> generated from the attributes of the <b>RmzTiledObject</b>.
 	 */
-	public function getSprite():FlxSprite {
-		return this.sprite;
+	public function getObject():FlxBasic {
+		return this.object;
 	}
 	
 	/**

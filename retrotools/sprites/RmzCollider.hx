@@ -22,10 +22,11 @@ class RmzCollider extends FlxSprite
 	
 	private var collidingGroup:FlxGroup;
 	private var CollidingClass:Class<FlxObject>;
+	public var colliding:Bool = false;
 	
 	private var attachedObject:FlxObject;
-	private var attached:Bool = false;
 	private var attachmentOffset:FlxPoint;
+	private var attached:Bool = false;
 	
 	private var timer:FlxTimer;
 
@@ -45,12 +46,24 @@ class RmzCollider extends FlxSprite
 	}
 	
 	override public function update():Void {
-		FlxG.overlap(this, collidingGroup, verifyCollision);
+		colliding = false;
 		if ( attached ) {
 			this.x = attachedObject.x + attachmentOffset.x;
 			this.y = attachedObject.y + attachmentOffset.y;
 		}
 		super.update();
+		FlxG.overlap(this, collidingGroup, verifyCollision);
+	}
+	
+	/**
+	 * Defines the values for the horizontal and vertical attachment offsets.
+	 * 
+	 * @param	offsetX		<b>Float</b> representing the x coordinate of the attachment offset.
+	 * @param	offsetY		<b>Float</b> representing the x coordinate of the attachment offset.
+	 */
+	public function setAttachmentOffset( offsetX:Float, offsetY:Float ):Void {
+		attachmentOffset.x = offsetX;
+		attachmentOffset.y = offsetY;
 	}
 	
 	/**
@@ -60,8 +73,10 @@ class RmzCollider extends FlxSprite
 	 * @param	target		<b>FlxObject</b> representing the object the <b>RmzCollider</b> has hit.
 	 */
 	private function verifyCollision(self:FlxObject, target:FlxObject):Void {
-		if ( Std.is( target, CollidingClass ) )
+		if ( Std.is( target, CollidingClass ) && alive ) {
 			onHit( target );
+			colliding = true;
+		}
 	}
 	
 	/**
@@ -82,7 +97,6 @@ class RmzCollider extends FlxSprite
 	 * If assigned to a value of zero or less, the <b>RmzCollider</b> remains active until it's killed externally.
 	 */
 	public function activate( x:Float = 0, y:Float = 0, lifespan:Float = -1  ) {
-		revive();
 		if ( attached ) {
 			x += attachedObject.x + attachmentOffset.x;
 			y += attachedObject.y + attachmentOffset.x;
@@ -91,6 +105,7 @@ class RmzCollider extends FlxSprite
 		this.y = y;
 		if ( lifespan > 0 )
 			timer.start( lifespan, timeOut, 1 );
+		revive();
 	}
 	
 	/**
@@ -100,7 +115,7 @@ class RmzCollider extends FlxSprite
 	 * @param	offsetX		<b>Float</b> representing the horizontal offset from the target's position and the <b>RmzCollider</b>'s
 	 * @param	offsetY		<b>Float</b> representing the vertical offset from the target's position and the <b>RmzCollider</b>'s
 	 */
-	public function attach( target:FlxObject, offsetX:Float, offsetY:Float ):Void {
+	public function attach( target:FlxObject, offsetX:Float=0, offsetY:Float=0 ):Void {
 		this.attachedObject = target;
 		attachmentOffset.x = offsetX;
 		attachmentOffset.y = offsetY;

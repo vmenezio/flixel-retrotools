@@ -5,7 +5,9 @@ import flixel.FlxBasic;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
+import flixel.group.FlxTypedGroup;
 import flixel.tile.FlxTilemap;
+import flixel.FlxObject;
 
 // Retrotools Imports
 import retrotools.controller.RmzController;
@@ -29,8 +31,13 @@ class RmzState extends FlxState
 	private var controller:RmzController;
 	private var pauseController:RmzController;
 	
+	// Groups containing all the included objects, for easier sorting
+	private var objectGroup:FlxTypedGroup<FlxObject>;
+	private var mapGroup:FlxGroup;
+	
 	private var paused:Bool;
 	private var pauseHandler:FlxBasic;
+	private var pauseSource:String;
 	
 	private var player:FlxSprite;
 
@@ -41,6 +48,12 @@ class RmzState extends FlxState
 		
 		controller = new RmzController();
 		pauseController = new RmzController();
+		
+		mapGroup = new FlxGroup();
+		add( mapGroup );
+		
+		objectGroup = new FlxTypedGroup();
+		add( objectGroup );
 		
 		paused = false;
 	}
@@ -59,18 +72,19 @@ class RmzState extends FlxState
 		pauseController.checkKeyPress();
 	}
 	
-	public function pause( pauseHandler:FlxBasic = null ):Void {
+	public function pause( pauseHandler:FlxBasic = null, pauseSource:String ):Void {
 		if ( pauseHandler != null ) {
 			this.pauseHandler = pauseHandler;
 		} else if ( this.pauseHandler == null ) {
 			throw "Can't pause if there is no pauseHandler.";
 		}
 		paused = true;
+		this.pauseSource = pauseSource;
 		add( pauseHandler );
 	}
 	
-	public function unpause():Void {
-		if ( paused ) {
+	public function unpause( pauseSource:String ):Void {
+		if ( paused && this.pauseSource == pauseSource ) {
 			paused = false;
 			remove( pauseHandler );
 		}
@@ -87,14 +101,27 @@ class RmzState extends FlxState
 	public function includeGroup( group:FlxGroup, name:String, addNow:Bool = true , addColliders:Bool = true ):Void {
 		groupMap.set( name, group );
 		if ( addNow ) {
-			add( group );
+			//add( group );
+			addGroup( group );
 		}
 		
 		if ( addColliders ) {
 			for ( member in group.members ) {
 				if ( Std.is( member, RmzActor ) ) {
-					group.add( cast( member, RmzActor ).getColliderGroup() ) ;
+					for ( mem in cast( member, RmzActor ).getColliderGroup().members ) {
+						objectGroup.add( cast( mem, FlxObject ) );
+					}
 				}
+			}
+		}
+	}
+	
+	private function addGroup( group:FlxGroup ) {
+		for ( mem in group.members ) {
+			if ( Std.is( mem, FlxObject ) ) {
+				objectGroup.add( cast( mem, FlxObject ) );
+			} else if ( Std.is( mem, FlxGroup ) ) {
+				addGroup( cast( mem, FlxGroup ) );
 			}
 		}
 	}
@@ -102,7 +129,7 @@ class RmzState extends FlxState
 	public function includeTilemap( tilemap:FlxTilemap, name:String, addNow:Bool = true ):Void {
 		tilemapMap.set( name, tilemap );
 		if ( addNow )
-			add( tilemap );
+			mapGroup.add( tilemap );
 	}
 	
 	public function getGroup( name:String ):FlxGroup {
