@@ -90,7 +90,10 @@ class RmzTilemap {
 			
 		}
 		
-		throw "Layer with name '" + desiredLayer + "' not found within the .tmx file.";
+		if( returnGroup.length == 0 )
+			throw "Layer with name '" + desiredLayer + "' not found within the .tmx file.";
+			
+		return returnGroup;
 	}
 	
 	/**
@@ -183,7 +186,7 @@ class RmzTilemap {
 			}
 			
 			if (tileSet == null)
-				throw "Tileset '" + tilesetName + " not found. Did you mispell the 'tilesheet' property in the '" + tmxLayer.name + "' layer?";
+				throw "Tileset '" + tilesetName + "' not found. Did you mispell the 'tileset' property in the '" + tmxLayer.name + "' layer?";
 				
 			var imagePath 		= new Path(tileSet.imageSource);
 			var processedPath 	= TILESETS_PATH + imagePath.file + "." + imagePath.ext;

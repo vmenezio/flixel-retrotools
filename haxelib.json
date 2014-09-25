@@ -4,8 +4,8 @@
 	"license": "MIT",
 	"tags": ["game", "openfl", "flash", "cpp", "cross"],
 	"description": "Collection of useful classes that expand on HaxeFlixel's capabilities.",
-	"version": "0.1.0",
-	"releasenote": "Added textboxes, prompts, gamepad support and made fixes and adjustments to pretty much everything.",
+	"version": "0.1.1",
+	"releasenote": "Minor fixes to RmzTilemap.",
 	"contributors": ["zayora"],
 	"dependencies": { "flixel": "", "flixel-addons": "", "flixel-ui": "" }
 }
